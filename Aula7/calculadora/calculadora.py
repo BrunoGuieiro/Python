@@ -17,11 +17,11 @@ def calcular():
             resultado = math.sqrt(num1)
             etapas = f"√{num1} = {resultado}"
 
-    elif operacao == "bhaskara":
+    elif operacao == "bskr":
 
-        a = float(request.form["a"])
-        b = float(request.form["b"])
-        c = float(request.form["c"])
+        a = float(request.form["num1"])
+        b = float(request.form["num2"])
+        c = float(request.form["num3"])
 
         delta = b**2 - 4*a*c
 
@@ -42,15 +42,10 @@ def calcular():
             )
 
     else:
-
         num2_valor = request.form.get("num2", "").strip()
 
         if not num2_valor:
-            return render_template(
-                "calculadora.html",
-                etapas="Informe o segundo número",
-                resultados=""
-            )
+            return render_template("calculadora.html", etapas="Informe o segundo número", resultados="")
 
         num2 = float(num2_valor)
 
@@ -80,8 +75,4 @@ def calcular():
             resultado = num1 ** num2
             etapas = f"{num1} ^ {num2} = {resultado}"
 
-    return render_template(
-        "calculadora.html",
-        etapas=etapas,
-        resultados=resultado
-    )
+    return render_template("calculadora.html", etapas=etapas,resultados=resultado)

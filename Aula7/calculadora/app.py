@@ -9,11 +9,7 @@ def index():
     if request.method == "POST":
         return calcular()
 
-    return render_template(
-        "calculadora.html",
-        etapas="",
-        resultados=""
-    )
+    return render_template("calculadora.html",etapas="",resultados="")
 
 
 if __name__ == "__main__":

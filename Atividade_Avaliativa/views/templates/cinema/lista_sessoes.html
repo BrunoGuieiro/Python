@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Programação{% endblock %}
+
+{% block content %}
+<h1>Programação do Cinema</h1>
+<p class="subtitulo">Sessões disponíveis</p>
+
+<a class="btn" href="{{ url_for('cinema.cadastrar_sessao') }}">Nova Sessão</a>
+
+{% if sessoes %}
+<table>
+    <thead>
+        <tr>
+            <th>Filme</th>
+            <th>Sala</th>
+            <th>Data / Hora</th>
+            <th>Preço</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sessao in sessoes %}
+        <tr>
+            <td>
+                {{ sessao.filme.titulo }}
+                {% if sessao.filme.classificacao %}
+                ({{ sessao.filme.classificacao }})
+                {% endif %}
+            </td>
+            <td>Sala {{ sessao.sala.numero }}</td>
+            <td>{{ sessao.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>R$ {{ "%.2f"|format(sessao.preco) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="vazio">Nenhuma sessão cadastrada.</p>
+{% endif %}
+{% endblock %}

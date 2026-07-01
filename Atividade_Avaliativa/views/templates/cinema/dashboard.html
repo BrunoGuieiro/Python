@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<p class="subtitulo">Resumo do cinema</p>
+
+<div class="cards">
+    <div class="card">
+        <span class="card-num">{{ total_filmes }}</span>
+        <span class="card-label">Filmes</span>
+    </div>
+    <div class="card">
+        <span class="card-num">{{ total_salas }}</span>
+        <span class="card-label">Salas</span>
+    </div>
+    <div class="card">
+        <span class="card-num">{{ total_sessoes }}</span>
+        <span class="card-label">Sessões</span>
+    </div>
+</div>
+
+{% if sessoes %}
+<h2>Últimas Sessões</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Filme</th>
+            <th>Sala</th>
+            <th>Data / Hora</th>
+            <th>Preço</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sessao in sessoes %}
+        <tr>
+            <td>
+                {{ sessao.filme.titulo }}
+                {% if sessao.filme.classificacao %}
+                ({{ sessao.filme.classificacao }})
+                {% endif %}
+            </td>
+            <td>Sala {{ sessao.sala.numero }}</td>
+            <td>{{ sessao.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>R$ {{ "%.2f"|format(sessao.preco) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="vazio">Nenhuma sessão cadastrada.</p>
+{% endif %}
+{% endblock %}

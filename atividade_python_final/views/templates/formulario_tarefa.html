@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar tarefa' if tarefa else 'Nova tarefa' }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">
+                    <i class="bi {{ 'bi-pencil-square' if tarefa else 'bi-plus-circle' }}"></i>
+                    {{ 'Editar tarefa' if tarefa else 'Nova tarefa' }}
+                </h2>
+                <form method="POST" action="{{ url_for('tarefas.editar', tarefa_id=tarefa['id']) if tarefa else url_for('tarefas.nova_tarefa') }}">
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" value="{{ tarefa['titulo'] if tarefa else '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3">{{ tarefa['descricao'] if tarefa else '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            {% for status in status_validos %}
+                                <option value="{{ status }}" {% if tarefa and tarefa['status'] == status %}selected{% endif %}>{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Salvar</button>
+                        <a href="{{ url_for('tarefas.dashboard') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

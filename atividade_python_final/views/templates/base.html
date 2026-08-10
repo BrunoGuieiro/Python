@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Painel de Tarefas{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('tarefas.dashboard') }}">
+                <i class="bi bi-check2-square"></i> Painel de Tarefas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    {% if session.get('usuario_id') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('tarefas.dashboard') }}"><i class="bi bi-grid"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('tarefas.nova_tarefa') }}"><i class="bi bi-plus-circle"></i> Nova tarefa</a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-light"><i class="bi bi-person-circle"></i> {{ session['usuario_nome'] }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Sair</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item ms-lg-2">
+                        <button id="btnTema" class="btn btn-outline-light btn-sm" type="button" aria-label="Alternar tema">
+                            <i class="bi bi-moon-stars"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container flex-grow-1 py-4">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                {% for categoria, mensagem in mensagens %}
+                    <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+                        {{ mensagem }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function aplicarTema(tema) {
+            document.documentElement.setAttribute("data-bs-theme", tema);
+            document.body.classList.toggle("bg-dark", tema === "dark");
+            document.body.classList.toggle("text-light", tema === "dark");
+            const botao = document.getElementById("btnTema");
+            if (botao) {
+                botao.innerHTML = tema === "dark"
+                    ? '<i class="bi bi-sun"></i>'
+                    : '<i class="bi bi-moon-stars"></i>';
+            }
+        }
+        aplicarTema(localStorage.getItem("tema") || "light");
+        const botaoTema = document.getElementById("btnTema");
+        if (botaoTema) {
+            botaoTema.addEventListener("click", function () {
+                const atual = document.documentElement.getAttribute("data-bs-theme");
+                const novo = atual === "dark" ? "light" : "dark";
+                localStorage.setItem("tema", novo);
+                aplicarTema(novo);
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
